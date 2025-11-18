@@ -1,0 +1,23 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.skleton{
+  display:grid;
+}
+.navSkleton{
+  display: Flex;
+  border:red solid 1px;
+  justify-content: space-between;
+  align-items: center;
+  margin:1rem;
+}
+.showcase{
+  border:solid 1px yellow;
+}
+.footer{
+  border:1px solid red;
+}
