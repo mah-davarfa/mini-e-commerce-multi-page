@@ -1,16 +1,23 @@
 
-import {getProductsInLoadingPage} from '../api/ProductsApi'
+import {getProductsByCategory,getProducts} from '../api/ProductsApi'
 import { useEffect,useState } from 'react' 
+import { useParams, Link } from 'react-router-dom';
 export default function Products (){
     const [isLoading,setIsloading]= useState(true);
-    const [products,setProducts]= useState();
+    const [products,setProducts]= useState([]);
     const [error , setError] = useState(null);
-        useEffect(()=>{
+        const {category}=useParams()
+    
+    useEffect(()=>{
 
             let cancelled = false;
-            const getProducts = async()=>{
+            const loadProducts = async()=>{
+                setIsloading(true)
                 try{
-                    const data = await getProductsInLoadingPage();
+                   const data = category ? 
+                   await getProductsByCategory(category)
+                    : 
+                    await getProducts();
                     if(!cancelled)  setProducts(data);
                 }catch (err){
                     if(!cancelled) setError(err.message || "Failed to load products");
@@ -18,27 +25,30 @@ export default function Products (){
                     if(!cancelled)setIsloading(false);
                 }
                };
-               getProducts();
+               loadProducts();
 
                return()=>{
                 cancelled = true;
                }
-        },[])
+        },[category])
+
         if(isLoading)return <p>Products is Loading...</p>
         if(error) return <p>the page can not load because : {error}</p>
 
     return(
         <div>
-            <h2>the Products from: https://fakestoreapi.com are:</h2>
+            <h2>The Products from: https://fakestoreapi.com:</h2>
             {products.map((t)=>
             (
-                <section key={t.id}>
+                <Link key={t.id} to={`/products/${t.id}`}>
+                 <section >
                     <p>{t.title}</p>
                     <p>${t.price}</p>
-                    <p>{t.discription}</p>
+                    <p>{t.description}</p>
                     <p>{t.category}</p>
                     <img src={t.image} alt="picture"/>
-                </section>
+                   </section>
+                </Link> 
             )
             )}
         </div>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
 import NavBar from "./components/NavBar";
@@ -23,6 +23,7 @@ function App() {
       <Routes>
         <Route path="/" element={<ShowCase />}>
           <Route index element={<Products />} />
+          <Route path="category/:category" element={<Products/>}/>
           <Route path="products/:id" element={<Product />} />
           <Route path="cart" element={<Cart />} />
           <Route path="login" element={<Login />} />
