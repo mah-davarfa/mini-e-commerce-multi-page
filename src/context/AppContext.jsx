@@ -8,7 +8,7 @@ export default function AppProvider  ({children}){
     const [wrongPassword,setWrongPassword]= useState(false);
     const [users,setUsers]=useState({});
     const [currentUser,setCurrentUser]=useState('')
-
+    
 
 
    
@@ -21,7 +21,6 @@ export default function AppProvider  ({children}){
             wrongPassword,
             isLoggedin,
             currentUser,
-           
             setIsLoggedin,
             setWrongPassword,
             users,

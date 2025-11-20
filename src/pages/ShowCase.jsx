@@ -33,7 +33,7 @@ export default function ShowCase (){
   return(
 
     <div className='showcase'>
-      <h2>Welcome to the Showcase</h2>
+      
       <div>
         {category.map((t)=>
         (

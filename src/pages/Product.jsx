@@ -6,7 +6,7 @@ export default function Product(){
 
     const [isLoading,setIsloading]=useState(false)
     const [error, setError]= useState('')
-    const [ product,setProduct] = useState([]);
+    const [ product,setProduct] = useState({});
 
     useEffect(()=>{
         let cancelled = false;
@@ -19,7 +19,7 @@ export default function Product(){
             }catch(error){
                 if(!cancelled) setError(error.message|| 'loading product failed')
             }finally{
-                setIsloading(false)
+                if(!cancelled) setIsloading(false)
             }
            }
 
