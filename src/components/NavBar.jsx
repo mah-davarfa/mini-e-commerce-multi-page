@@ -1,8 +1,9 @@
 import {useNavigate ,useLocation, useSearchParams} from 'react-router-dom'
 
-import { useState } from 'react';
+import { useState,AppContext, useContext} from 'react';
 
 export default function NavBar() {
+  const {countsOfItems}= useContext (AppContext);
   const [search,setSearch]=useState('');
   const [searchParams,setSearchParams]=useSearchParams()
   const  query = searchParams.get("q")|| '';
@@ -53,7 +54,7 @@ export default function NavBar() {
       <div>
         <p>Profile</p>
         <button onClick={handleLogin}>{isLogin?'log out':'log in'} </button>  
-        <button onClick={()=>navigate('/cart')}> cart</button>
+        <button onClick={()=>navigate('/cart')}> your cart has {countsOfItems} items</button>
       </div>
 
     </div>

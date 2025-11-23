@@ -78,7 +78,23 @@ export default function AppProvider  ({children}){
                 }
                 setCart([]);
             },[isLoggedin, currentUser, users, cart.length])
+            
+            ///counts for carts to show on navbar
+            useEffect(()=>{
+                const countsOfItems =()=>{
+                    if(!isLoggedin) {return cart.length;
 
+                    }else if (isLoggedin && currentUser){
+                        const userId = users[currentUser].id;
+                        const userCart = usersCart[userId] || {};
+                       const itemsArray = Object.entries(userCart).length;
+                       return itemsArray;
+                    }else {return 0;}
+
+                    
+                }
+                countsOfItems();
+            },[usersCart, cart])
 
     return(
         <AppContext.Provider value={{
@@ -95,6 +111,7 @@ export default function AppProvider  ({children}){
             usersCart,
             setUsersCart,
             setCart,
+            countsOfItems
         }}>
             {children}
         </AppContext.Provider>    
