@@ -58,11 +58,15 @@ export default function Products (){
             (
                 <Link key={t.id} to={`/products/${t.id}`}>
                  <section >
-                    <p>{t.title}</p>
-                    <p>${t.price}</p>
-                    <p>{t.description}</p>
                     <p>{t.category}</p>
+                    <p>{t.title}</p>
                     <img src={t.image} alt="picture"/>
+                    <p>${t.price}</p>
+                    <button
+                    
+                    >
+                        add to cart
+                    </button>
                    </section>
                 </Link> 
             )

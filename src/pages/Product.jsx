@@ -1,12 +1,15 @@
 import { useParams } from "react-router-dom"
-import {useEffect,useState} from 'react'
+import {useEffect,useState,useContext} from 'react'
 import {getProductById} from '../api/ProductsApi'
+import { AppContext } from "../context/AppContext";
 export default function Product(){
+    const {handleAddCart} = useContext(AppContext);
     const {id}= useParams();
-
+    const [quantity, setQuantity]= useState(1);
     const [isLoading,setIsloading]=useState(false)
     const [error, setError]= useState('')
     const [ product,setProduct] = useState({});
+   
 
     useEffect(()=>{
         let cancelled = false;
@@ -34,20 +37,38 @@ export default function Product(){
     return(
         <div>
              <h3>Product Details</h3>
-             
-                <section key={product.id}>
+                 <form 
+                    onSubmit={(e)=>{
+                        e.preventDefault();
+                        handleAddCart(product,quantity)
+                     }}
+                    >
+                  <section key={product.id}>
                     <p>{product.title}</p>
-                    <p>${product.price}</p>
+                    <img src={product.image} alt="picture"/>
                     <p>{product.description}</p>
                     <p>{product.category}</p>
+                    <p>${product.price}</p>
                     <p>
                         rate: {product.rating?.rate}, count: {product.rating?.count}
                     </p>
-                    <img src={product.image} alt="picture"/>
-                </section>
-                
-             
+                       <button
+                        type='submit'>
+                            add to cart
+                        </button>
+                        <label>
+                            Quantity :
+                        </label>
+                        <input
+                        onChange={(e)=>setQuantity(Number(e.target.value))}
+                        type="number" 
+                        step="1" 
+                        min="1" 
+                        value={quantity} 
+                       
+                        ></input>
+                    </section>
+                 </form>
         </div>
-           
     )
 }

@@ -8,37 +8,37 @@ export default function Login (){
     setUsers,users,setWrongPassword,
     setIsLoggedin,setCurrentUser }= useContext(AppContext)
 
-    const navigat = useNavigate();
+    const navigate = useNavigate();
     const location = useLocation();
     const from = location.state?.from|| '/';
     console.log('login page location is: ',location);
     const [password, setPassword] = useState("");
-
+    const [userName,setUserName]=useState('')
 
         const handleSubmit=(e)=>{
             e.preventDefault();
-            checkUserIfExist(currentUser,password)
+            checkUserIfExist(userName,password)
         }
  
-    const checkUserIfExist=(currentUser,password)=>{
+    const checkUserIfExist=(logedInName,password)=>{
        
-        if (!users[currentUser]){
-            setUsers(per=>({
-                ...per,
-                [currentUser]:{password}
+        if (!users[logedInName]){//user not exist create new user
+            setUsers(perUser=>({
+                ...perUser,
+                [logedInName]:{password:password, id:Date.now()}
             }))
     console.log('users :', users)        
             setWrongPassword(false)
             setIsLoggedin(true)
-            
-    console.log('current user:', currentUser)        
-            navigat(from ,{replace:true})
-        }else if (users[currentUser].password===password){
+            setCurrentUser(logedInName)
+    console.log('current user:', logedInName)        
+            navigate(from ,{replace:true})
+        }else if (users[logedInName].password===password){//user exist and password correct
             setWrongPassword(false)
             setIsLoggedin(true)
-           
-            navigat(from ,{replace:true})
-        }else{
+           setCurrentUser(logedInName)
+            navigate(from ,{replace:true})
+        }else{//user exist but password wrong
             setWrongPassword(true);
             setIsLoggedin(false);
             }
@@ -51,10 +51,10 @@ export default function Login (){
              onSubmit={handleSubmit}>
                 <input
                 type='text'
-                value={currentUser}
+                value={userName}
                 placeholder="User Name"
                 required
-                onChange={(e)=>setCurrentUser(e.target.value.trim())}
+                onChange={(e)=>setUserName(e.target.value.trim())}
                 />  
                 <input
                 type='password'
@@ -65,8 +65,15 @@ export default function Login (){
                 />   
                 <button type='submit'>submit</button>          
             </form>
-            {wrongPassword? <p>Wrong Password Try Again</p>: ''}
+            {wrongPassword? <p>Wrong user name or Password Try Again</p>: ''}
         </div>
     ): <Navigate to={from} />
     
 )}
+//usersCart = {
+      //   userId1: { itemId1: {...}, itemId2: {...} }, object.entries-> [[itemId1,{...}],[itemId2,{...}]]
+     //   userId2: { ... },
+     // }
+     ///////////////////////////
+     //cart = [{item:id,quatity: number,price:number,titl:name,image},..]
+     ////////////////
