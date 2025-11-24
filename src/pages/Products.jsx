@@ -1,6 +1,6 @@
 
 import {getProductsByCategory,getProducts} from '../api/ProductsApi'
-import { useEffect,useState,useMemo } from 'react' 
+import { useEffect,useState,useMemo ,useRef} from 'react' 
 import { useParams, Link,useSearchParams ,useNavigate} from 'react-router-dom';
 export default function Products (){
     const [isLoading,setIsloading]= useState(true);
@@ -9,8 +9,9 @@ export default function Products (){
     const {category}=useParams()
     const [SearchParams]=useSearchParams();
     const searchTerm = (SearchParams.get('q') || '').toLowerCase();
-    
+    const navigate = useNavigate();
 
+    
     useEffect(()=>{
 
             let cancelled = false;
@@ -47,14 +48,36 @@ export default function Products (){
             (p)=>p.title.toLowerCase().includes(searchTerm.toLowerCase())
         ).length===0;
 
+        const timerRef = useRef (null);
+        useEffect(() => {
+            // clear any existing timer first
+            if (timerRef.current) {
+            clearTimeout(timerRef.current);
+            timerRef.current = null;
+            }
+
+            if (!showNotFound) return; // nothing to do
+
+            timerRef.current = setTimeout(() => {
+            navigate("/", { replace: true });
+            }, 2000);
+
+            // cleanup on dependency change OR unmount
+            return () => {
+            if (timerRef.current) clearTimeout(timerRef.current);
+            timerRef.current = null;
+            };
+        }, [showNotFound, navigate]);
+
         if(isLoading)return <p>Products is Loading...</p>
         if(error) return <p>the page can not load because : {error}</p>
 
     return(
-        <div> {showNotFound &&
-            (<p>The {searchTerm} that you are looking for is out of stock</p>)}
-            <h2>The Products from: https://fakestoreapi.com:</h2>
-            {filteredProduct.map((t)=>
+        <div> {showNotFound ? (
+            (<p>The {searchTerm} that you are looking for is out of stock</p>)
+        ):(
+            <div>
+             {filteredProduct.map((t)=>
             (
                 <Link key={t.id} to={`/products/${t.id}`}>
                  <section >
@@ -67,6 +90,10 @@ export default function Products (){
                 </Link> 
             )
             )}
+            </div>
+        )}
+            
+           
         </div>
     )
 }

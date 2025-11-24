@@ -16,10 +16,8 @@ function App() {
   return (
     <AppProvider>
         <div className='skeleton'>
-      <h1>WelCome to Multipage App</h1>
-      <button>
-        if you are closing the App click here to clear all localStorage
-      </button>
+      <h1>WelCome to Mini E-Commerce App</h1>
+
       <NavBar />
       <Routes>
         <Route path="/" element={<ShowCase />}>

@@ -11,7 +11,7 @@ export default function NavBar() {
   const location = useLocation();
   console.log('navbar page location is: ',location);
   
-  
+
  
      const handleLogin=()=>{
     
@@ -35,7 +35,7 @@ export default function NavBar() {
     <div className='navSkleton'>
       
       <div>
-        <p>Logo</p>
+        <p>https://fakestoreapi.com:</p>
 
       </div>
       <div>

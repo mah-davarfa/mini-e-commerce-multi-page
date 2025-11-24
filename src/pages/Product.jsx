@@ -1,5 +1,5 @@
 import { useParams,useNavigate } from "react-router-dom"
-import {useEffect,useState,useContext} from 'react'
+import {useEffect,useState,useContext,useRef} from 'react'
 import {getProductById} from '../api/ProductsApi'
 import { AppContext } from "../context/AppContext";
 export default function Product(){
@@ -11,36 +11,50 @@ export default function Product(){
     const [ product,setProduct] = useState({});
     const [addProduct,setAddProduct]= useState(false);
     const navigate = useNavigate();
+        
     useEffect(()=>{
-        let cancelled = false;
-        const getProduct=async(id)=>{
-            setIsloading(true)
+            let cancelled = false;
+            const getProduct=async(id)=>{
+                setIsloading(true)
 
-            try{
-                const data = await getProductById(id);
-                if(!cancelled) setProduct(data); console.log('data in product page:',data)
-            }catch(error){
-                if(!cancelled) setError(error.message|| 'loading product failed')
-            }finally{
-                if(!cancelled) setIsloading(false)
+                try{
+                    const data = await getProductById(id);
+                    if(!cancelled) setProduct(data); console.log('data in product page:',data)
+                }catch(error){
+                    if(!cancelled) setError(error.message|| 'loading product failed')
+                }finally{
+                    if(!cancelled) setIsloading(false)
+                }
             }
-           }
 
-         getProduct(id)
-        return()=>{
-            cancelled=true; 
+            getProduct(id)
+            return()=>{
+                    cancelled=true; 
+            }
+        },[id])
+
+        const timerRef= useRef (null);
+        const handleAdd =(product,quantity)=>{
+                handleAddCart(product,quantity);
+                setAddProduct(true);
+                //clear old timout if exists
+                if(timerRef.current){
+                    clearTimeout (timerRef.current);
+                    timerRef.current=null;
+                }
+                timerRef.current= setTimeout(()=>{
+                    navigate('/', {replace:true});
+                },1500)
         }
-    },[id])
 
-    const handleAdd =(product,quantity)=>{
-        handleAddCart(product,quantity);
-        setAddProduct(true);
-        setTimeout(()=>{
-            setAddProduct(false);
-            navigate('/');
-            
-        },1500)
-    }
+        useEffect(()=>{
+            return()=>{
+                if(timerRef.current){
+                    clearTimeout (timerRef.current);
+                    timerRef.current=null;
+            }
+        }
+        },[])
 
     if(isLoading)return <p>loading product ...</p>
     if(error) return <p>there is Error to load product : {error}</p>
