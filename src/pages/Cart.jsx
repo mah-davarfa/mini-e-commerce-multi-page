@@ -8,6 +8,7 @@ export default function Cart (){
     const {usersCart,setUsersCart,setCart,cart,users,currentUser,isLoggedin}= useContext(AppContext);
     const [isEditingItemId,setIsEditingItemId]= useState (null);
     const[newQuantity,setNewQuantity]= useState (1);
+    const[isCartEmpty,setIsCartEmpty]= useState(false);
     const navigate = useNavigate();
     
     const handleCheckout =()=>{
@@ -15,8 +16,12 @@ export default function Cart (){
     }
     const userCartItems = ()=>{
      const userId= users[currentUser]?.id;
-     const userCarts = usersCart[userId] ;
+     const userCarts = usersCart[userId] || {} ;
      return  Object.entries(userCarts)
+    }
+    const startEdit =(itemId,currentQuantity)=>{
+        setIsEditingItemId(itemId);
+        setNewQuantity(currentQuantity);
     }
     const handleEdit =(itemId,newQuantity)=>{
         const userId= users[currentUser]?.id;
@@ -47,7 +52,7 @@ export default function Cart (){
     const handleDelete = (itemId)=>{
         const userId= users[currentUser]?.id;
         
-        if(isLoggedin){
+        if(isLoggedin && userId){
             setUsersCart((preUsersCart)=>{
                 const items = preUsersCart[userId];// all carts for this user
                 const {[itemId]: _remove, ...restItems} = items;//remove the item from user carts
@@ -68,7 +73,7 @@ export default function Cart (){
                  
             })
             }
-        }
+    }
  
        
 return(                       
@@ -85,7 +90,7 @@ return(
                         isEditingItemId !== itemId ?(
                             <div>
                                 <span>Quantity: {item.quantity}</span>
-                                <button onClick={()=>setIsEditingItemId(itemId)}>Edit</button>
+                                <button onClick={()=>startEdit(itemId,item.quantity)}>Edit</button>
                             </div>
                         ):(
                                 <form onSubmit={(e)=>{
@@ -118,7 +123,7 @@ return(
                             isEditingItemId !==item.id ? (
                                 <div>
                                     <span >Quantity: {item.quantity}</span>
-                                    <button onClick={()=>setIsEditingItemId(item.id)}>Edit</button>
+                                    <button onClick={()=>startEdit(item.id,item.quantity)}>Edit</button>
                                 </div>
                             ):(
                                 <form onSubmit={(e)=>{
@@ -143,7 +148,19 @@ return(
                   ))
                 )}
             </div>
-                <button onClick ={handleCheckout}>check out</button>
+                <div>{
+                    (isLoggedin && userCartItems().length ===0) || (!isLoggedin && cart.length===0) ?(
+                       <>
+                        <p>Your cart is empty</p>
+                        <button onClick ={()=>navigate('/')}>Go to shop</button>
+                       </>
+                        
+                    ):(
+                        <button onClick ={handleCheckout}>check out</button>
+                    ) 
+                    }
+                </div>
+                
         </div>
     ) 
 }
@@ -152,7 +169,7 @@ return(
       //   userId1: { itemId1: {...}, itemId2: {...} }, object.entries-> [[itemId1,{...}],[itemId2,{...}]]
      //   userId2: { ... },
      // }
-     ///////////////////////////
+     ///////////////////////////Object.entries(userCarts) -> [[itemId, {item}], [itemId, {item}]]
      //cart = [{item:id,quatity: number,price:number,titl:name,image},..]
      ////////////////
      //newCart ={

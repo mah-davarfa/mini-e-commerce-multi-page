@@ -1,17 +1,16 @@
 import {useNavigate ,useLocation, useSearchParams} from 'react-router-dom'
-
-import { useState,AppContext, useContext} from 'react';
-
+import { sanitizeBasic } from '../utils/sanitize.js';
+import { useState, useContext} from 'react';
+import {AppContext} from '../context/AppContext.jsx'
 export default function NavBar() {
-  const {countsOfItems}= useContext (AppContext);
+  const {countsOfItems,isLoggedin,currentUser}= useContext (AppContext);
   const [search,setSearch]=useState('');
   const [searchParams,setSearchParams]=useSearchParams()
-  const  query = searchParams.get("q")|| '';
-      
+        
   const navigate = useNavigate();
   const location = useLocation();
   console.log('navbar page location is: ',location);
-  const isLogin = false;
+  
   
  
      const handleLogin=()=>{
@@ -21,10 +20,17 @@ export default function NavBar() {
   
   const handleSearchSubmit=(e)=>{
     e.preventDefault()
-    setSearchParams({q:search})
+    const cleanedSearch= sanitizeBasic(search)
+    if(!cleanedSearch){
+    navigate({pathname:'/', search:''})
     setSearch('')
-   
+    return;
+   }
+   //setSearchParams({q:cleanedSearch})
+   navigate({pathname:'/', search:`?q=${cleanedSearch}`})
+   setSearch('')
   }
+
   return (
     <div className='navSkleton'>
       
@@ -40,7 +46,7 @@ export default function NavBar() {
           type="text"
           value={search}
           required
-          onChange={(e)=>setSearch(e.target.value)}
+          onChange={(e)=>setSearch(e.target.value.trim())}
           >
           </input>
           <button
@@ -52,8 +58,10 @@ export default function NavBar() {
         
       </div>
       <div>
-        <p>Profile</p>
-        <button onClick={handleLogin}>{isLogin?'log out':'log in'} </button>  
+        {isLoggedin && currentUser ?
+          <p>{currentUser}</p> : ""}
+        
+        <button onClick={handleLogin}>{isLoggedin?'log out':'log in'} </button>  
         <button onClick={()=>navigate('/cart')}> your cart has {countsOfItems} items</button>
       </div>
 

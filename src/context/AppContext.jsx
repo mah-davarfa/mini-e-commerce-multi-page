@@ -1,14 +1,13 @@
-import {useContext, createContext, useState, useEffect } from 'react'
+import {useMemo, createContext, useState, useEffect } from 'react'
 
 export const AppContext = createContext(); 
 
 export default function AppProvider  ({children}){
-   
+    
     const [isLoggedin,setIsLoggedin]=useState(false)
     const [wrongPassword,setWrongPassword]= useState(false);
     const [users,setUsers]=useState({});  //users={user:{password:password,id:id},...}
     const [currentUser,setCurrentUser]=useState('')
-    //carts
     const [cart ,setCart]=useState([]); //[{item:id,quatity: number,price:number,titl:name,image},..]
     const [usersCart,setUsersCart]= useState({});   //usersCart = {
                                                                 //   userId1: { itemId1: {...}, itemId2: {...} },
@@ -80,21 +79,15 @@ export default function AppProvider  ({children}){
             },[isLoggedin, currentUser, users, cart.length])
             
             ///counts for carts to show on navbar
-            useEffect(()=>{
-                const countsOfItems =()=>{
-                    if(!isLoggedin) {return cart.length;
+            const countsOfItems = useMemo(()=>{
+                if(!isLoggedin) return cart.length;
+                const userId= users[currentUser]?.id;
+                if(userId ){
+                    return Object.keys(usersCart[userId]||{}).length;
+                }else {return 0;}
+            
+            },[isLoggedin, cart, usersCart, currentUser, users])
 
-                    }else if (isLoggedin && currentUser){
-                        const userId = users[currentUser].id;
-                        const userCart = usersCart[userId] || {};
-                       const itemsArray = Object.entries(userCart).length;
-                       return itemsArray;
-                    }else {return 0;}
-
-                    
-                }
-                countsOfItems();
-            },[usersCart, cart])
 
     return(
         <AppContext.Provider value={{

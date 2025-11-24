@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom"
+import { useParams,useNavigate } from "react-router-dom"
 import {useEffect,useState,useContext} from 'react'
 import {getProductById} from '../api/ProductsApi'
 import { AppContext } from "../context/AppContext";
@@ -9,8 +9,8 @@ export default function Product(){
     const [isLoading,setIsloading]=useState(false)
     const [error, setError]= useState('')
     const [ product,setProduct] = useState({});
-   
-
+    const [addProduct,setAddProduct]= useState(false);
+    const navigate = useNavigate();
     useEffect(()=>{
         let cancelled = false;
         const getProduct=async(id)=>{
@@ -31,7 +31,17 @@ export default function Product(){
             cancelled=true; 
         }
     },[id])
-    console.log('product in poduct page:',product);
+
+    const handleAdd =(product,quantity)=>{
+        handleAddCart(product,quantity);
+        setAddProduct(true);
+        setTimeout(()=>{
+            setAddProduct(false);
+            navigate('/');
+            
+        },1500)
+    }
+
     if(isLoading)return <p>loading product ...</p>
     if(error) return <p>there is Error to load product : {error}</p>
     return(
@@ -40,18 +50,19 @@ export default function Product(){
                  <form 
                     onSubmit={(e)=>{
                         e.preventDefault();
-                        handleAddCart(product,quantity)
+                        handleAdd(product,quantity)
                      }}
                     >
                   <section key={product.id}>
                     <p>{product.title}</p>
-                    <img src={product.image} alt="picture"/>
+                    <img src={product.image} alt={product.title}/>
                     <p>{product.description}</p>
                     <p>{product.category}</p>
                     <p>${product.price}</p>
                     <p>
                         rate: {product.rating?.rate}, count: {product.rating?.count}
                     </p>
+                    {addProduct && <p>product added to cart</p>}
                        <button
                         type='submit'>
                             add to cart

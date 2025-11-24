@@ -11,11 +11,12 @@ import ShowCase from "./pages/ShowCase";
 import Login from "./pages/Login";
 import CheckOut from "./pages/CheckOut";
 import AppProvider from "./context/AppContext";
+import { NotFound } from "./pages/NotFound";
 function App() {
   return (
     <AppProvider>
-        <div className='skleton'>
-      <h1>Well come to Multipage App</h1>
+        <div className='skeleton'>
+      <h1>WelCome to Multipage App</h1>
       <button>
         if you are closing the App click here to clear all localStorage
       </button>
@@ -36,6 +37,7 @@ function App() {
             }
           />
         </Route>
+        <Route path="*" element={<NotFound/>} />
       </Routes>
       <Footer />
     </div>

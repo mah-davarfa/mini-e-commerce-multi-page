@@ -37,7 +37,7 @@ export default function ShowCase (){
       <div>
         {category.map((t)=>
         (
-           <Link key={t} to= {`category/${encodeURIComponent(t)}`} >{t}</Link>
+           <Link key={t} to= {`category/${t}`} >{t}</Link>
         )
       )}
       </div>

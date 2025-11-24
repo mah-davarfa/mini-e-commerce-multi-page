@@ -52,7 +52,7 @@ export default function Products (){
 
     return(
         <div> {showNotFound &&
-            (<p>The {searchTerm} that you are looking for is out of stuck</p>)}
+            (<p>The {searchTerm} that you are looking for is out of stock</p>)}
             <h2>The Products from: https://fakestoreapi.com:</h2>
             {filteredProduct.map((t)=>
             (
@@ -60,13 +60,9 @@ export default function Products (){
                  <section >
                     <p>{t.category}</p>
                     <p>{t.title}</p>
-                    <img src={t.image} alt="picture"/>
+                    <img src={t.image} alt={t.title}/>
                     <p>${t.price}</p>
-                    <button
-                    
-                    >
-                        add to cart
-                    </button>
+                    <button>View Details</button>
                    </section>
                 </Link> 
             )

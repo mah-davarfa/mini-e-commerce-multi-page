@@ -1,7 +1,7 @@
 import { useNavigate, useLocation,Navigate} from "react-router-dom"
 import {useContext ,useState} from 'react'
 import { AppContext } from "../context/AppContext";
-
+import { sanitizeBasic } from '../utils/sanitize.js';
 export default function Login (){
     const {
     currentUser,isLoggedin,wrongPassword,
@@ -27,11 +27,11 @@ export default function Login (){
                 ...perUser,
                 [logedInName]:{password:password, id:Date.now()}
             }))
-    console.log('users :', users)        
+         
             setWrongPassword(false)
             setIsLoggedin(true)
             setCurrentUser(logedInName)
-    console.log('current user:', logedInName)        
+         
             navigate(from ,{replace:true})
         }else if (users[logedInName].password===password){//user exist and password correct
             setWrongPassword(false)
@@ -42,7 +42,7 @@ export default function Login (){
             setWrongPassword(true);
             setIsLoggedin(false);
             }
-        }
+    }
 
     return(
         (!isLoggedin)?(
@@ -54,14 +54,14 @@ export default function Login (){
                 value={userName}
                 placeholder="User Name"
                 required
-                onChange={(e)=>setUserName(e.target.value.trim())}
+                onChange={(e)=>setUserName(sanitizeBasic(e.target.value.trim()))}
                 />  
                 <input
                 type='password'
                 value={password}
                 placeholder="Password"
                 required
-                onChange={(e)=>setPassword(e.target.value.trim())}
+                onChange={(e)=>setPassword(e.target.value)}
                 />   
                 <button type='submit'>submit</button>          
             </form>
