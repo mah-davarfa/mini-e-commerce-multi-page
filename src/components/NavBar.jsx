@@ -1,11 +1,11 @@
-import {useNavigate ,useLocation, useSearchParams} from 'react-router-dom'
+import {useNavigate ,useLocation, useSearchParams,NavLink} from 'react-router-dom'
 import { sanitizeBasic } from '../utils/sanitize.js';
 import { useState, useContext} from 'react';
 import {AppContext} from '../context/AppContext.jsx'
 export default function NavBar() {
   const {countsOfItems,isLoggedin,currentUser}= useContext (AppContext);
   const [search,setSearch]=useState('');
-  const [searchParams,setSearchParams]=useSearchParams()
+  // const [searchParams,setSearchParams]=useSearchParams()
         
   const navigate = useNavigate();
   const location = useLocation();
@@ -22,11 +22,12 @@ export default function NavBar() {
     e.preventDefault()
     const cleanedSearch= sanitizeBasic(search)
     if(!cleanedSearch){
-    navigate({pathname:'/', search:''})
+    //navigate({pathname:'/', search:''})
+    // setSearchParams({}) //clean the url search params
     setSearch('')
     return;
    }
-   //setSearchParams({q:cleanedSearch})
+  //  setSearchParams({q:cleanedSearch})
    navigate({pathname:'/', search:`?q=${cleanedSearch}`})
    setSearch('')
   }
@@ -62,7 +63,7 @@ export default function NavBar() {
           <p>{currentUser}</p> : ""}
         
         <button onClick={handleLogin}>{isLoggedin?'log out':'log in'} </button>  
-        <button onClick={()=>navigate('/cart')}> your cart has {countsOfItems} items</button>
+        <NavLink to = "/cart" className ={({isActive})=>isActive? 'Active': undefined}>Cart Itemes: {countsOfItems}</NavLink>
       </div>
 
     </div>

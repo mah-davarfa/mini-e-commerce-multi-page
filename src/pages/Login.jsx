@@ -1,23 +1,27 @@
-import { useNavigate, useLocation,Navigate} from "react-router-dom"
+import { useNavigate, useLocation,Navigate,useSearchParams} from "react-router-dom"
 import {useContext ,useState} from 'react'
 import { AppContext } from "../context/AppContext";
 import { sanitizeBasic } from '../utils/sanitize.js';
 export default function Login (){
     const {
-    currentUser,isLoggedin,wrongPassword,
+    isLoggedin,wrongPassword,
     setUsers,users,setWrongPassword,
     setIsLoggedin,setCurrentUser }= useContext(AppContext)
-
+    const [searchParams,setSearchParams]= useSearchParams();
     const navigate = useNavigate();
     const location = useLocation();
     const from = location.state?.from|| '/';
     console.log('login page location is: ',location);
     const [password, setPassword] = useState("");
-    const [userName,setUserName]=useState('')
-
+    
+//sanitizeBasic(searchParams.get('user'))||""
+        
+        const readName = sanitizeBasic(searchParams.get("user")||"").toLowerCase().trim();
         const handleSubmit=(e)=>{
             e.preventDefault();
-            checkUserIfExist(userName,password)
+             if (!readName) return;
+            
+            checkUserIfExist(readName, password); // use the fresh local value
         }
  
     const checkUserIfExist=(logedInName,password)=>{
@@ -31,10 +35,11 @@ export default function Login (){
             setWrongPassword(false)
             setIsLoggedin(true)
             setCurrentUser(logedInName)
-         
+            setSearchParams({});  
             navigate(from ,{replace:true})
         }else if (users[logedInName].password===password){//user exist and password correct
             setWrongPassword(false)
+            setSearchParams({});  
             setIsLoggedin(true)
            setCurrentUser(logedInName)
             navigate(from ,{replace:true})
@@ -50,12 +55,16 @@ export default function Login (){
             <form 
              onSubmit={handleSubmit}>
                 <input
-                type='text'
-                value={userName}
+                type="text"
+                value={readName}
                 placeholder="User Name"
                 required
-                onChange={(e)=>setUserName(sanitizeBasic(e.target.value.trim()))}
-                />  
+                autoFocus
+                autoCapitalize="none"
+                spellCheck={false}
+                autoComplete="username"
+                onChange={(e)=> {setSearchParams({ user: e.target.value}); 
+                 }}/>  
                 <input
                 type='password'
                 value={password}

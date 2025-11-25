@@ -1,4 +1,4 @@
-import { Outlet ,Link} from "react-router-dom"
+import { Outlet ,Link,NavLink} from "react-router-dom"
 import {getCategories} from '../api/ProductsApi'
 import {useEffect,useState} from 'react'
 
@@ -37,7 +37,9 @@ export default function ShowCase (){
       <div>
         {category.map((t)=>
         (
-           <Link key={t} to= {`category/${t}`} >{t}</Link>
+          <NavLink key={t} to={`/category/${t}`} className={({isActive})=> isActive ? 'active' : undefined}>
+            {t}
+          </NavLink>
         )
       )}
       </div>

@@ -1,4 +1,4 @@
-import {useNavigate} from 'react-router-dom'
+import {useNavigate,NavLink} from 'react-router-dom'
 import {useState,useContext}from 'react'
 import {AppContext} from '../context/AppContext.jsx'
 
@@ -152,11 +152,14 @@ return(
                     (isLoggedin && userCartItems().length ===0) || (!isLoggedin && cart.length===0) ?(
                        <>
                         <p>Your cart is empty</p>
-                        <button onClick ={()=>navigate('/')}>Go to shop</button>
+                        <NavLink to ="/" className={({isActive})=>isActive ? isActive :undefined}>Shop more</NavLink>
                        </>
                         
                     ):(
-                        <button onClick ={handleCheckout}>check out</button>
+                        <div>
+                            <button onClick ={handleCheckout}>check out</button>
+                            <NavLink to ="/" className={({isActive})=>isActive ? isActive :undefined}>Shop more</NavLink>
+                        </div>
                     ) 
                     }
                 </div>
