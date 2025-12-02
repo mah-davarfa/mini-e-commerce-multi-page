@@ -2,8 +2,12 @@ import {useNavigate ,useLocation, useSearchParams,NavLink} from 'react-router-do
 import { sanitizeBasic } from '../utils/sanitize.js';
 import { useState, useContext} from 'react';
 import {AppContext} from '../context/AppContext.jsx'
+
 export default function NavBar() {
-  const {countsOfItems,isLoggedin,currentUser}= useContext (AppContext);
+  const {countsOfItems,isLoggedin,currentUser,
+    setIsLoggedin,setCurrentUser,
+  setTheme,theme}= useContext (AppContext);
+
   const [search,setSearch]=useState('');
   // const [searchParams,setSearchParams]=useSearchParams()
         
@@ -11,13 +15,20 @@ export default function NavBar() {
   const location = useLocation();
   console.log('navbar page location is: ',location);
   
-
+  const changeTheme= ()=>{
+   setTheme(theme==='light'?'dark':'light')
+  }
  
      const handleLogin=()=>{
-    
-    navigate('/login',{state:{from:location.pathname}})
+      navigate('/login',{state:{from:location.pathname}})
   }
-  
+
+  const handleLogout=()=>{
+    setIsLoggedin(false);
+    setCurrentUser('');
+    navigate('/',{replace:true});
+  }
+
   const handleSearchSubmit=(e)=>{
     e.preventDefault()
     const cleanedSearch= sanitizeBasic(search)
@@ -33,13 +44,15 @@ export default function NavBar() {
   }
 
   return (
-    <div className='navSkleton'>
-      
+    <div className='navSkeleton'>
       <div>
-        <p>https://fakestoreapi.com:</p>
-
+        <button onClick={changeTheme}>{theme==='light'?'Dark':'Light'}</button>
       </div>
       <div>
+        <p>https://fakestoreapi.com</p>
+
+      </div>
+      
         <form
           onSubmit={handleSearchSubmit}
         >
@@ -57,12 +70,12 @@ export default function NavBar() {
           </button>
         </form>
         
-      </div>
-      <div>
+      
+      <div className="navBtLg">
         {isLoggedin && currentUser ?
           <p>{currentUser}</p> : ""}
         
-        <button onClick={handleLogin}>{isLoggedin?'log out':'log in'} </button>  
+        <button onClick={isLoggedin? handleLogout: handleLogin}>{isLoggedin?'log out':'log in'} </button>  
         <NavLink to = "/cart" className ={({isActive})=>isActive? 'Active': undefined}>Cart Itemes: {countsOfItems}</NavLink>
       </div>
 

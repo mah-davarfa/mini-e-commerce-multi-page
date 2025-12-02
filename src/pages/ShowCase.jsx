@@ -28,8 +28,8 @@ export default function ShowCase (){
           }
       },[])
     
-  if (isloading) return <p>Menu is loading...</p>
-  if(error) return <p>there is erro for loading menu: {error}</p>
+  if (isloading) return <p className="ms">Menu is loading...</p>
+  if(error) return <p className="ms">there is erro for loading menu: {error}</p>
   return(
 
     <div className='showcase'>
@@ -43,7 +43,7 @@ export default function ShowCase (){
         )
       )}
       </div>
-      <div>
+      <div className="showcaseOutlet">
        <Outlet />
       </div>
     </div>

@@ -12,10 +12,14 @@ import Login from "./pages/Login";
 import CheckOut from "./pages/CheckOut";
 import AppProvider from "./context/AppContext";
 import { NotFound } from "./pages/NotFound";
+
 function App() {
+  
+
+
   return (
     <AppProvider>
-        <div className='skeleton'>
+    <div className='skeleton'>
       <h1>WelCome to Mini E-Commerce App</h1>
 
       <NavBar />

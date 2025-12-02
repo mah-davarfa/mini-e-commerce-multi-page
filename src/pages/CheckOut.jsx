@@ -42,14 +42,14 @@ export default function CheckOut (){
    },[])
 
     return(
-        <div>
+        <div className="checkout">
             {isCheckOutClicked ?(
              <div>
-                    <h2>Because we don't have backEnd set up,
+                    <h2 className="ms">Because we don't have backEnd set up,
                         <br/>then we can not get your payment information,<br/>
                          then you purchase is free of charge</h2>
                          
-                    <p>Thanks for your purchase</p>
+                    <p className="ms">Thanks for your purchase</p>
              </div>
             ):(
             <div>

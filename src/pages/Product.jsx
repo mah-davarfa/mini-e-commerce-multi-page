@@ -59,8 +59,9 @@ export default function Product(){
     if(isLoading)return <p>loading product ...</p>
     if(error) return <p>there is Error to load product : {error}</p>
     return(
-        <div>
-             <h3>Product Details</h3>
+        <div className="product-skeleton">
+            <div className="product-details">    
+                 <h3>Product Details</h3>
                  <form 
                     onSubmit={(e)=>{
                         e.preventDefault();
@@ -76,7 +77,7 @@ export default function Product(){
                     <p>
                         rate: {product.rating?.rate}, count: {product.rating?.count}
                     </p>
-                    {addProduct && <p>product added to cart</p>}
+                    {addProduct && <p className="ms">product added to cart</p>}
                        <button
                         type='submit'>
                             add to cart
@@ -94,6 +95,8 @@ export default function Product(){
                         ></input>
                     </section>
                  </form>
+            </div>
+            
         </div>
     )
 }

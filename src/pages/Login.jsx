@@ -51,7 +51,7 @@ export default function Login (){
 
     return(
         (!isLoggedin)?(
-        <div>
+        <div className="login-form">
             <form 
              onSubmit={handleSubmit}>
                 <input
@@ -63,7 +63,7 @@ export default function Login (){
                 autoCapitalize="none"
                 spellCheck={false}
                 autoComplete="username"
-                onChange={(e)=> {setSearchParams({ user: e.target.value}); 
+                onChange={(e)=> {setSearchParams({ user: e.target.value},{ replace: true, state: location.state }) 
                  }}/>  
                 <input
                 type='password'
@@ -74,7 +74,7 @@ export default function Login (){
                 />   
                 <button type='submit'>submit</button>          
             </form>
-            {wrongPassword? <p>Wrong user name or Password Try Again</p>: ''}
+            {wrongPassword? <p className="ms">Wrong user name or Password Try Again</p>: ''}
         </div>
     ): <Navigate to={from} />
     

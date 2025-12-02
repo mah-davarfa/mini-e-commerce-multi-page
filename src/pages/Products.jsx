@@ -69,14 +69,14 @@ export default function Products (){
             };
         }, [showNotFound, navigate]);
 
-        if(isLoading)return <p>Products is Loading...</p>
-        if(error) return <p>the page can not load because : {error}</p>
+        if(isLoading)return <p className="ms">Products is Loading...</p>
+        if(error) return <p className="ms">the page can not load because : {error}</p>
 
     return(
-        <div> {showNotFound ? (
-            (<p>The {searchTerm} that you are looking for is out of stock</p>)
+        <div className="products"> {showNotFound ? (
+            (<p className="ms">The {searchTerm} that you are looking for is out of stock</p>)
         ):(
-            <div>
+            <div className="products-flex">
              {filteredProduct.map((t)=>
             (
                 <Link key={t.id} to={`/products/${t.id}`}>
@@ -86,7 +86,7 @@ export default function Products (){
                     <img src={t.image} alt={t.title}/>
                     <p>${t.price}</p>
                     <button>View Details</button>
-                   </section>
+                 </section>
                 </Link> 
             )
             )}

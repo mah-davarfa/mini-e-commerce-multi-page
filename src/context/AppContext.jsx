@@ -1,18 +1,21 @@
 import {useMemo, createContext, useState, useEffect } from 'react'
-
+import { useLocalStorage } from '../hooks/useLocalStorage';
 export const AppContext = createContext(); 
 
 export default function AppProvider  ({children}){
-    
-    const [isLoggedin,setIsLoggedin]=useState(false)
+    const [theme,setTheme]=useLocalStorage("theme",'dark')
+    const [isLoggedin,setIsLoggedin]=useLocalStorage("isLoggedin",false)
     const [wrongPassword,setWrongPassword]= useState(false);
-    const [users,setUsers]=useState({});  //users={user:{password:password,id:id},...}
-    const [currentUser,setCurrentUser]=useState('')
-    const [cart ,setCart]=useState([]); //[{item:id,quatity: number,price:number,titl:name,image},..]
-    const [usersCart,setUsersCart]= useState({});   //usersCart = {
+    const [users,setUsers]=useLocalStorage("users",{});  //users={user:{password:password,id:id},...}
+    const [currentUser,setCurrentUser]=useLocalStorage("currentUser",'')
+    const [cart ,setCart]=useLocalStorage("cart",[]); //[{item:id,quatity: number,price:number,titl:name,image},..]
+    const [usersCart,setUsersCart]= useLocalStorage("usersCart",{});   //usersCart = {
                                                                 //   userId1: { itemId1: {...}, itemId2: {...} },
                                                                 //   userId2: { ... },
                                                                 // }
+        useEffect(()=>{
+            document.documentElement.setAttribute('data-theme', theme);
+        },[theme])
      
    //add,dellet , change quantity  addCart function used in product
         const handleAddCart = (product,quantity)=>{
@@ -91,6 +94,8 @@ export default function AppProvider  ({children}){
 
     return(
         <AppContext.Provider value={{
+            setTheme,
+            theme,
             wrongPassword,
             isLoggedin,
             currentUser,

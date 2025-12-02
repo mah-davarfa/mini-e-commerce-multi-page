@@ -74,15 +74,17 @@ export default function Cart (){
             })
             }
     }
- 
-       
+    const totalUsersCart= userCartItems().reduce((sum,[,item])=>(sum+Number(item.price)*Number(item.quantity)),0);
+        
+
+    const totalCart = cart.reduce((sum,item)=>(sum+Number(item.price)*Number(item.quantity)),0);
 return(                       
-        <div>
+        <div >
             <h2>Cart</h2>
-            <div>
+            <div className='cart'> 
                 {isLoggedin?( 
-                   userCartItems().map(([itemId,item])=>(
-                    <div key={itemId}>
+                    userCartItems().map(([itemId,item])=>(
+                    <div key={itemId} className='cart-card'>
                         <img src={item.image} alt={item.title} width="50"/>
                         <span>{item.title}</span>
                         <span>Price: {item.price}</span>
@@ -113,9 +115,10 @@ return(
                         <button onClick={()=>{handleDelete(itemId)}}>Delete</button>
                     </div>
                    ))
+
                 ):(
                      cart.map(item=>(
-                    <div key={item.id}>
+                    <div key={item.id} className='cart-card'>
                         <img src={item.image} alt={item.title} width="50"/>
                         <span>{item.title}</span>
                         <span>Price: {item.price}</span>
@@ -146,17 +149,19 @@ return(
                         <button onClick={()=>{handleDelete(item.id)}}>Delete</button>
                     </div>
                   ))
+
                 )}
             </div>
-                <div>{
+                <div className='cart-checkout'>{
                     (isLoggedin && userCartItems().length ===0) || (!isLoggedin && cart.length===0) ?(
                        <>
-                        <p>Your cart is empty</p>
+                        <p className="ms">Your cart is empty</p>
                         <NavLink to ="/" className={({isActive})=>isActive ? isActive :undefined}>Shop more</NavLink>
                        </>
                         
                     ):(
                         <div>
+                            <p>Total: ${isLoggedin?totalUsersCart:totalCart}</p>
                             <button onClick ={handleCheckout}>check out</button>
                             <NavLink to ="/" className={({isActive})=>isActive ? isActive :undefined}>Shop more</NavLink>
                         </div>
